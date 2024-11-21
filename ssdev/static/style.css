@@ -1,0 +1,147 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #ffffff;
+    color: #333;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 10px auto;
+    padding: 10px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+}
+
+header {
+    padding: 15px;
+    background-color: #faf7f0;
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column; /* Kolumna dla tytułu, podtytułu i menu */
+}
+
+.title {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 10px; /* Odstęp między podtytułem a menu */
+}
+
+header h1, header h2 {
+    margin: 0;
+    text-align: left;
+}
+
+header h2 {
+    font-weight: normal;
+    font-size: 1rem;
+}
+
+.menu {
+    align-self: flex-end;
+    display: flex;
+    list-style-type: none;
+    padding: 0;
+    gap: 15px;
+}
+
+.menu a {
+    text-decoration: none;
+    color: #333;
+    font-weight: normal; /* Delikatniejsza czcionka dla linków w menu głównym */
+}
+
+footer {
+    padding: 15px;
+    background-color: #faf7f0;
+    border: 1px solid #ddd;
+    margin-top: 10px; /* Margines między sekcją środkową a stopką */
+}
+
+main {
+    display: flex;
+    width: 100%;
+    gap: 10px;
+}
+
+.sidebar {
+    width: 20%;
+    padding: 20px; /* Większy padding dla menu kontekstowego */
+    background-color: #faf7f0;
+    border: 1px solid #ddd;
+}
+
+.sidebar .menu {
+    display: flex;
+    flex-direction: column;
+    padding-left: 15px; /* Większy padding dla lepszego wyśrodkowania linków */
+}
+
+.sidebar .menu li {
+    padding: 5px 0;
+}
+
+.content {
+    width: 80%;
+    padding: 10px;
+    background-color: #faf7f0;
+    border: 1px solid #ddd;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+td {
+    padding: 8px;
+    text-align: center;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-weight: bold;
+}
+
+.form-group input {
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}
+
+button {
+    padding: 10px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #333;
+    border: none;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+button:hover {
+    background-color: #555;
+}
