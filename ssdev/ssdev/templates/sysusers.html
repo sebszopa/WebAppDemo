@@ -1,0 +1,30 @@
+{% include 'menu.html' %}
+<main>
+    {% include 'context.html' %}
+    <section class="content">
+    <h1>System Users</h1>
+    <table>
+        <thead>
+            <tr>
+                <td>Id</td>
+                <th>e-mail</th>
+                <th>name</th>
+                <th>surname</th>
+                <th>role</th>
+              </tr>
+        </thead>
+        <tbody>
+            {% for row in rows %}
+                <tr>
+                    <td>{{ row[0] }}</td>
+                    <td>{{ row[1] }}</td>
+                    <td>{{ row[2] }}</td>
+                    <td>{{ row[3] }}</td>
+                    <td>{{ row[4] }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </section>
+</main>
+{% include 'foot.html' %}
