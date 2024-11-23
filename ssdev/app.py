@@ -16,6 +16,9 @@ def index():
     return render_template('index.html')
 
 # Displaying system users from SQLite database
+# Changned the method how users data are diplayed
+# New table column - nameed - "More" sendig the hidden form to user details page
+
 @app.route('/system')
 def get_sysusers():
     with sqlite3.connect(SQLITE_DB) as conn:
@@ -81,20 +84,25 @@ def add_sysuser():
 
     return render_template('sysuser_added.html', name=name, surname=surname, email=email, role=role)
 
+# New feture - updating users Details
 @app.route('/system/users/more', methods=['GET', 'POST'])
 def user_more_details():
-    su_id = request.form.get('su_id')  # Zmieniamy na request.form.get() dla danych przesyłanych metodą POST
+    su_id = request.form.get('su_id')
 
+# checking if su_id has been post
     if su_id is None:
-        return "No user id provided", 400  # Dodajemy walidację, aby upewnić się, że su_id zostało przesłane
+        return "No user id provided", 400
+
+# collecting one user details form SQLite
+# Next feautre - collecting related user data from MongoDB to displau at the same page
 
     with sqlite3.connect(SQLITE_DB) as conn:
-        conn.row_factory = sqlite3.Row  # Zmieniamy na słownik dla łatwiejszego dostępu
+        conn.row_factory = sqlite3.Row  # Change to names
         cursor = conn.cursor()
         cursor.execute('SELECT "su_id", "email", "name", "surname", "role" FROM "sys_usrs" WHERE su_id = ?', (su_id,))
-        row = cursor.fetchone()  # Pobieramy tylko jeden wiersz
+        row = cursor.fetchone()  # Picking up just one row
         if row:
-            return render_template('sysuser_mod_form.html', row=row)  # Upewnij się, że przekazujesz 'row'
+            return render_template('sysuser_mod_form.html', row=row)  # rendering row details 
         else:
             return "User not found", 404
 
