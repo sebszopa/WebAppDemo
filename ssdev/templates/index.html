@@ -2,8 +2,18 @@
 <main>
     {% include 'context.html' %}
     <section class="content">
-        <h1> Home page of my testing app</h1>
-        <br>
-        </section>
+        <!-- Displaing messages if they exist-->
+        {% if messages %}
+            <div class="messages">
+                {% for category, message in messages %}
+                    <div class="alert {{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <!-- Home page conten -->
+            <h1> Home page of my testing app</h1>
+            <br>
+        {% endif %}
+    </section>
 </main>
 {% include 'foot.html' %}

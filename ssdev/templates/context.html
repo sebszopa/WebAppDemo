@@ -1,7 +1,28 @@
 <aside class="sidebar">
-    <h3>Context menu</h3>
+    <b>Context menu</b>
+    <br>
+  <ul>
+    {% if 'username' in session %}
+        <h3>Welcome, {{ session['username'] }}!</h3>
         <br>
+        <p><b>You are logged in.</b></p>
+        <br>
+        <h3>Logged users only</h3>
+        <br>
+        <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+        <li><a href="{{ url_for('logout') }}">Log out</a></li>
         <li><a href="/system/users/add">Add SysUser</a></li>
+    {% else %}
+        <form action="{{ url_for('login') }}" method="post">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            <button type="submit">Login</button>
+        </form>
+    {% endif %}
+        <br>
+        <h3>Other menu</h3>
         <li><a href="#">Link 1</a></li>
         <li><a href="#">Link 2</a></li>
         <li><a href="#">Link 3</a></li>

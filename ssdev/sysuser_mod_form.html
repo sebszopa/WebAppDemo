@@ -34,6 +34,26 @@
                 </tr>
             </table>
         </form>
+        <br>
+        <h1>Change Sytem User Password</h1>
+        <form name="update_pwd" method="post" action="/system/users/update_pwd">
+            <table>
+              <tr>
+                  <td>Type Password</td>
+                  <td><input type="password" name="pwd1" required></td>
+              </tr>
+              <tr>
+                    <td>Retype Password</td>
+                    <td><input type="password" name="pwd2" required></td>
+              </tr>
+              <tr>
+                    <td colspan="2">
+                      <input type="hidden" name="su_id" value="{{ row['su_id'] }}">
+                        <button type="submit">Change password</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
 <!-- Nest step - picking up related user data from MongoDB if their exists
   to display them in table below -->
     <br>

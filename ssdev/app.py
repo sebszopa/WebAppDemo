@@ -1,7 +1,8 @@
 # !!! Test system user test1@test2.com pass test1234
 
-from flask import Flask, render_template, request, jsonify, redirect, url_for, abort
-from bcrypt import hashpw, gensalt
+from flask import Flask, render_template, request, jsonify, redirect, url_for, abort, session, flash, get_flashed_messages
+from bcrypt import hashpw, gensalt, checkpw
+from functools import wraps
 import sqlite3
 import os
 # importing repleacing string library
@@ -11,11 +12,73 @@ import re
 from config import SQLITE_DB
 
 app = Flask(__name__)
+app.secret_key = 'uwjs9wksk'
+
+### LOGGIN SECTION AND SESSIONS ###
+# login in form processing
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'username' not in session:
+            return redirect(url_for('login'))
+        return f(*args, **kwargs)
+    return decorated_function
+
+# login out - end of session
+@app.route('/logout')
+def logout():
+    # Usuń dane użytkownika z sesji
+    session.pop('username', None)
+    return redirect(url_for('index'))
+
+# checking system user in SQLite databese
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        with sqlite3.connect(SQLITE_DB) as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT email, passwd FROM sys_usrs WHERE email=?", (username,))
+            result = cursor.fetchone()
+
+            if result and checkpw(password.encode('utf-8'), result[1]):
+                # Autentication - verfied user
+                session['username'] = username
+                return redirect(url_for('index'))
+            else:
+                # Unathenticatd user
+                return render_template('index.html', title='Login Failed')
+
+    elif request.method == 'GET':
+        if 'username' in session:
+            # If user logged in
+            return redirect(url_for('index'))
+        else:
+            # Show login form
+            return render_template('index.html', title='Login')
+
+    else:
+        abort(405)
+# Ner section - logged in user area onlu
+@app.route('/dashboard')
+@login_required
+def dashboard():
+
+    # Eventually tp change for designeted html logged user page
+    return render_template('index.html', username=session['username'])
+
+### END OF LOGN SECTION ###
 
 # Home Page
+# UPDATED - Displaing messeges if they exists
+# Used flash metchod for messeges
 @app.route('/')
 def index():
-    return render_template('index.html')
+    messages = get_flashed_messages(with_categories=True)
+    return render_template('index.html', messages=messages)
 
 # Displaying system users from SQLite database
 # Changned the method how users data are diplayed
@@ -93,7 +156,8 @@ def user_more_details():
 
 # checking if su_id has been post
     if su_id is None:
-        return "No user id provided", 400
+        flash("No user id provided", 400)
+        return redirect(url_for('index'))
 
 # collecting one user details form SQLite
 # Next feautre - collecting related user data from MongoDB to displau at the same page
@@ -106,7 +170,37 @@ def user_more_details():
         if row:
             return render_template('sysuser_mod_form.html', row=row)  # rendering row details
         else:
-            return "User not found", 404
+            flash("User not found", 404)
+            return redirect(url_for('index'))
+
+### UPDATING USERR PASSWORD IN SQLite ###
+@app.route('/system/users/update_pwd', methods=['POST'])
+def update_password():
+    # Collecting password from form
+    pwd1 = request.form.get('pwd1')
+    pwd2 = request.form.get('pwd2')
+    su_id = request.form.get('su_id')
+
+    # Checking password missmatch
+    if pwd1 != pwd2:
+        flash("Passwords do not match. Please try again.", "error")
+        return redirect(url_for('index'))
+
+    # Encoding password
+    hashed_pwd = hashpw(pwd1.encode('utf-8'), gensalt())
+
+    # Updating pwd field in SQLite databes with matching su_id
+    with sqlite3.connect(SQLITE_DB) as conn:
+        cursor = conn.cursor()
+        try:
+            cursor.execute("UPDATE sys_usrs SET passwd = ? WHERE su_id = ?", (hashed_pwd, su_id))
+            conn.commit()
+            flash("Password updated successfully.", "success")
+        except sqlite3.Error as e:
+            flash(f"An error occurred: {e}", "error")
+            return redirect(url_for('index'))
+
+    return redirect(url_for('index'))
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8081, debug=True, use_reloader=False)
