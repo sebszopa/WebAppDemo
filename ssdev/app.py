@@ -1,3 +1,5 @@
+# !!! Test system user test1@test2.com pass test1234
+
 from flask import Flask, render_template, request, jsonify, redirect, url_for, abort
 from bcrypt import hashpw, gensalt
 import sqlite3
@@ -102,7 +104,7 @@ def user_more_details():
         cursor.execute('SELECT "su_id", "email", "name", "surname", "role" FROM "sys_usrs" WHERE su_id = ?', (su_id,))
         row = cursor.fetchone()  # Picking up just one row
         if row:
-            return render_template('sysuser_mod_form.html', row=row)  # rendering row details 
+            return render_template('sysuser_mod_form.html', row=row)  # rendering row details
         else:
             return "User not found", 404
 
