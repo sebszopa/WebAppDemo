@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, redirect, url_for, abort
 from bcrypt import hashpw, gensalt
 import sqlite3
 import os
@@ -19,10 +19,12 @@ def index():
 @app.route('/system')
 def get_sysusers():
     with sqlite3.connect(SQLITE_DB) as conn:
+        conn.row_factory = sqlite3.Row  # changing from data index to name
         cursor = conn.cursor()
         cursor.execute('SELECT "su_id", "email", "name", "surname", "role" FROM "sys_usrs";')
         rows = cursor.fetchall()
-
+        for row in rows:
+            print(dict(row))  #
     return render_template('sysusers.html', rows=rows)
 
 # Form to add system users
@@ -78,6 +80,23 @@ def add_sysuser():
         return jsonify({"error": "There was an error whie adding the data."}), 500
 
     return render_template('sysuser_added.html', name=name, surname=surname, email=email, role=role)
+
+@app.route('/system/users/more', methods=['GET', 'POST'])
+def user_more_details():
+    su_id = request.form.get('su_id')  # Zmieniamy na request.form.get() dla danych przesyłanych metodą POST
+
+    if su_id is None:
+        return "No user id provided", 400  # Dodajemy walidację, aby upewnić się, że su_id zostało przesłane
+
+    with sqlite3.connect(SQLITE_DB) as conn:
+        conn.row_factory = sqlite3.Row  # Zmieniamy na słownik dla łatwiejszego dostępu
+        cursor = conn.cursor()
+        cursor.execute('SELECT "su_id", "email", "name", "surname", "role" FROM "sys_usrs" WHERE su_id = ?', (su_id,))
+        row = cursor.fetchone()  # Pobieramy tylko jeden wiersz
+        if row:
+            return render_template('sysuser_mod_form.html', row=row)  # Upewnij się, że przekazujesz 'row'
+        else:
+            return "User not found", 404
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8081, debug=True, use_reloader=False)

@@ -2,29 +2,37 @@
 <main>
     {% include 'context.html' %}
     <section class="content">
-    <h1>System Users</h1>
-    <table>
-        <thead>
-            <tr>
-                <td>Id</td>
-                <th>e-mail</th>
-                <th>name</th>
-                <th>surname</th>
-                <th>role</th>
-              </tr>
-        </thead>
-        <tbody>
-            {% for row in rows %}
+        <h1>System Users</h1>
+        <table>
+            <thead>
                 <tr>
-                    <td>{{ row[0] }}</td>
-                    <td>{{ row[1] }}</td>
-                    <td>{{ row[2] }}</td>
-                    <td>{{ row[3] }}</td>
-                    <td>{{ row[4] }}</td>
+                    <th>Id</th>
+                    <th>e-mail</th>
+                    <th>Name</th>
+                    <th>Surname</th>
+                    <th>Role</th>
+                    <th>More</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for row in rows %}
+                    <tr>
+                        <td>{{ row["su_id"] }}</td>
+                        <td>{{ row["email"] }}</td>
+                        <td>{{ row["name"] }}</td>
+                        <td>{{ row["surname"] }}</td>
+                        <td>{{ row["role"] }}</td>
+                        <td>
+                            <!-- Formularz do przesyłania danych -->
+                            <form method="post" action="/system/users/more">
+                                <input type="hidden" name="su_id" value="{{ row['su_id'] }}">
+                                <button type="submit">More</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </section>
 </main>
 {% include 'foot.html' %}

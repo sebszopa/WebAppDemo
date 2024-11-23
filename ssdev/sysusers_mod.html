@@ -1,0 +1,45 @@
+{% include 'menu.html' %}
+<main>
+    {% include 'context.html' %}
+    <section class="content">
+        <h1>System Users</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>e-mail</th>
+                    <th>Name</th>
+                    <th>Surname</th>
+                    <th>Role</th>
+                    <th>Modify</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in rows %}
+                    <tr>
+                        <form name="sysusr_edit" method="post" action="/system/users/edit">
+                            <!-- Hidden field for su_id -->
+                            <input type="hidden" name="su_id" value="{{ row['su_id'] }}">
+
+                            <!-- Editable fields -->
+                            <td>{{ row["su_id"] }}</td>
+                            <td><input type="email" name="email" value="{{ row['email'] }}" required></td>
+                            <td><input type="text" name="name" value="{{ row['name'] }}" required></td>
+                            <td><input type="text" name="surname" value="{{ row['surname'] }}" required></td>
+                            <td>
+                                <select name="role">
+                                    <option value="admin" {% if row['role'] == 'admin' %}selected{% endif %}>Admin</option>
+                                    <option value="user" {% if row['role'] == 'user' %}selected{% endif %}>User</option>
+                                </select>
+                            </td>
+
+                            <!-- Submit button -->
+                            <td><button type="submit">Update</button></td>
+                        </form>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+</main>
+{% include 'foot.html' %}
