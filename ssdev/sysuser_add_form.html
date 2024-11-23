@@ -1,0 +1,27 @@
+{% include 'menu.html' %}
+<main>
+    {% include 'context.html' %}
+    <section class="content">
+        <h1>System User Add Form</h1>
+        <form name="sysusr_add" method="post" action="/system/users/added">
+            <div class="form-group">
+                <label for="name">First Name:</label>
+                <input type="text" id="name" name="name">
+            </div>
+            <div class="form-group">
+                <label for="surname">Surname:</label>
+                <input type="text" id="surname" name="surname">
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email">
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password">
+            </div>
+            <button type="submit">Add System User</button>
+        </form>
+    </section>
+</main>
+{% include 'foot.html' %} 

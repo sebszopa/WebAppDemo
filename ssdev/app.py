@@ -30,6 +30,12 @@ def get_sysusers():
 
     return render_template('sysusers.html', rows=rows)
 
+# from tu add sustem users to SQLite database
+
+@app.route('/system/users/add')
+def sysuser_add_form():
+    return render_template('sysuser_add_form.html')
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8081, debug=True, use_reloader=False)

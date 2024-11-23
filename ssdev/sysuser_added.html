@@ -1,0 +1,22 @@
+{% include 'menu.html' %}
+<main>
+    {% include 'context.html' %}
+    <section class="content">
+        <p> Dodano do systemu nowego użytkownika </p>
+        <table>
+            <tr>
+                <td>Imię</td>
+                <td>Nazwisko</td>
+                <td>Email</td>
+                <td>Email</td>
+            </tr>
+            <tr>
+                <td>{{ name }}</td>
+                <td>{{ surname }}</td>
+                <td>{{ email }}</td>
+                <td>{{ role }}</td>
+            </tr>
+        </table>
+    </section>
+</main> 
+{% include 'foot.html' %} 

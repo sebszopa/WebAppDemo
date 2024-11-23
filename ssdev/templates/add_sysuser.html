@@ -1,0 +1,34 @@
+{% include 'menu.html' %}
+<main>
+    {% include 'context.html' %}
+    <section class="content">
+        <h3>System Config</h3>
+        <ul>
+            <li><a href="/system/users">Users</a></li>
+            <li><a href="#">Link 2</a></li>
+            <li><a href="#">Link 3</a></li>
+        </ul>
+    </aside>
+    <section class="content">
+        <form name="sysusr_add" method="post" action="/system/users">
+            <div class="form-group">
+                <label for="name">Imię:</label>
+                <input type="text" id="name" name="name">
+            </div>
+            <div class="form-group">
+                <label for="surname">Nazwisko:</label>
+                <input type="text" id="surname" name="surname">
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email">
+            </div>
+            <div class="form-group">
+                <label for="password">Hasło:</label>
+                <input type="password" id="password" name="password">
+            </div>
+            <button type="submit">Dodaj Użytkownika</button>
+        </form>
+    </section>
+</main>
+{% include 'foot.html' %} 
