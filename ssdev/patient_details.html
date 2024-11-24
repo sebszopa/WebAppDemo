@@ -1,0 +1,58 @@
+{% include 'menu.html' %}
+<main>
+    {% include 'context.html' %}
+    <section class="content">
+      <h1>Patient Details</h1>
+      <table>
+          <tr>
+              <th>Patient ID</th>
+              <td>{{ patient['id'] }}</td>
+          </tr>
+          <tr>
+              <th>Gender</th>
+              <td>{{ patient['gender'] }}</td>
+          </tr>
+          <tr>
+              <th>Age</th>
+              <td>{{ patient['age'] }}</td>
+          </tr>
+          <tr>
+              <th>Hypertension</th>
+              <td>{{ patient['hypertension'] }}</td>
+          </tr>
+          <tr>
+              <th>Heart Disease</th>
+              <td>{{ patient['heart_disease'] }}</td>
+          </tr>
+          <tr>
+              <th>Ever Married</th>
+              <td>{{ patient['ever_married'] }}</td>
+          </tr>
+          <tr>
+              <th>Work Type</th>
+              <td>{{ patient['work_type'] }}</td>
+          </tr>
+          <tr>
+              <th>Residence Type</th>
+              <td>{{ patient['Residence_type'] }}</td>
+          </tr>
+          <tr>
+              <th>Average Glucose Level</th>
+              <td>{{ patient['avg_glucose_level'] }}</td>
+          </tr>
+          <tr>
+              <th>BMI</th>
+              <td>{{ patient['bmi'] }}</td>
+          </tr>
+          <tr>
+              <th>Smoking Status</th>
+              <td>{{ patient['smoking_status'] }}</td>
+          </tr>
+          <tr>
+              <th>Stroke</th>
+              <td>{{ patient['stroke'] }}</td>
+          </tr>
+      </table>
+    </section>
+</main>
+{% include 'foot.html' %}

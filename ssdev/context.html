@@ -11,7 +11,11 @@
         <br>
         <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
         <li><a href="{{ url_for('logout') }}">Log out</a></li>
+        <h3>Sytem</h3>
+        <li><a href="/system">System</a></li>
         <li><a href="/system/users/add">Add SysUser</a></li>
+        <h3>Patients</h3>
+        <li><a href="/patients">Patients</a></li>
     {% else %}
         <form action="{{ url_for('login') }}" method="post">
             <label for="username">Username:</label>
@@ -23,7 +27,6 @@
     {% endif %}
         <br>
         <h3>Other menu</h3>
-        <li><a href="#">Link 1</a></li>
         <li><a href="#">Link 2</a></li>
         <li><a href="#">Link 3</a></li>
     </ul>

@@ -1,15 +1,13 @@
 {% include 'menu.html' %}
 <main>
     {% include 'context.html' %}
-<!-- picking up single user data and creating table with input fields allowning
-  data to be modified -->
     <section class="content">
         <h1>System User Details</h1>
         <form name="sysusr_edit" method="post" action="/system/users/updated">
             <table>
                 <tr>
-                    <td><strong>Id</strong></td>
-                    <td>{{ row['su_id'] }}</td>
+                    <td><strong>Patient ID</strong></td>
+                    <td><input type="text" name="p_id" value="{{ row['p_id'] }}" required></td>
                 </tr>
                 <tr>
                     <td><strong>Email</strong></td>
@@ -35,30 +33,79 @@
             </table>
         </form>
         <br>
-        <h1>Change Sytem User Password</h1>
+        <h1>Change System User Password</h1>
         <form name="update_pwd" method="post" action="/system/users/update_pwd">
             <table>
-              <tr>
-                  <td>Type Password</td>
-                  <td><input type="password" name="pwd1" required></td>
-              </tr>
-              <tr>
+                <tr>
+                    <td>Type Password</td>
+                    <td><input type="password" name="pwd1" required></td>
+                </tr>
+                <tr>
                     <td>Retype Password</td>
                     <td><input type="password" name="pwd2" required></td>
-              </tr>
-              <tr>
+                </tr>
+                <tr>
                     <td colspan="2">
-                      <input type="hidden" name="su_id" value="{{ row['su_id'] }}">
-                        <button type="submit">Change password</button>
+                        <input type="hidden" name="su_id" value="{{ row['su_id'] }}">
+                        <button type="submit">Change Password</button>
                     </td>
                 </tr>
             </table>
         </form>
-<!-- Nest step - picking up related user data from MongoDB if their exists
-  to display them in table below -->
-    <br>
-    <h2> If user exists in MongoDB, more datails will be shown below</h2>
 
+        <!-- Showing data from MongoDB related to PatientID -->
+        {% if row['p_id'] %}
+        <br>
+        <h2>Additional Details from MongoDB</h2>
+        <table>
+            <tr>
+                <td><strong>Gender</strong></td>
+                <td>{{ row['gender'] }}</td>
+            </tr>
+            <tr>
+                <td><strong>Age</strong></td>
+                <td>{{ row['age'] }}</td>
+            </tr>
+            <tr>
+                <td><strong>Hypertension</strong></td>
+                <td>{{ 'Yes' if row['has_hypertension'] else 'No' }}</td>
+            </tr>
+            <tr>
+                <td><strong>Heart Disease</strong></td>
+                <td>{{ 'Yes' if row['has_heart_disease'] else 'No' }}</td>
+            </tr>
+            <tr>
+                <td><strong>Marital Status</strong></td>
+                <td>{{ row['marital_status'] }}</td>
+            </tr>
+            <tr>
+                <td><strong>Work Type</strong></td>
+                <td>{{ row['work_type'] }}</td>
+            </tr>
+            <tr>
+                <td><strong>Residence Type</strong></td>
+                <td>{{ row['residence_type'] }}</td>
+            </tr>
+            <tr>
+                <td><strong>Average Glucose Level</strong></td>
+                <td>{{ row['avg_glucose_level'] }}</td>
+            </tr>
+            <tr>
+                <td><strong>BMI</strong></td>
+                <td>{{ row['bmi'] }}</td>
+            </tr>
+            <tr>
+                <td><strong>Smoking Status</strong></td>
+                <td>{{ row['smoking_status'] }}</td>
+            </tr>
+            <tr>
+                <td><strong>Stroke History</strong></td>
+                <td>{{ 'Yes' if row['stroke_history'] else 'No' }}</td>
+            </tr>
+        </table>
+        {% else %}
+        <p>No additional details are available for this user.</p>
+        {% endif %}
     </section>
 </main>
 {% include 'foot.html' %}

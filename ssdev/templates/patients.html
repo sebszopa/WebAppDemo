@@ -1,0 +1,45 @@
+{% include 'menu.html' %}
+<main>
+    {% include 'context.html' %}
+    <section class="content">
+      <h1>Patients Data</h1>
+      <table>
+<thead>
+    <tr>
+        {% for header in headers %}
+            <th>{{ header }}</th>
+        {% endfor %}
+        <th>More</th>
+    </tr>
+</thead>
+<tbody>
+    {% for row in users_data %}
+        <tr>
+            <td>{{ row['id'] }}</td>  <!-- Wyświetlanie 'id' -->
+            <td>{{ row['gender'] }}</td>
+            <td>{{ row['age'] }}</td>
+            <td>{{ row['work_type'] }}</td>
+            <td>{{ row['Residence_type'] }}</td>
+            <td>{{ row['bmi'] }}</td>
+            <td>{{ row['smoking_status'] }}</td>
+            <td>{{ row['stroke'] }}</td>
+            <td><a href="{{ url_for('patient_details', patient_id=row['id']) }}">More</a></td>  <!-- Link do szczegółów pacjenta -->
+        </tr>
+    {% endfor %}
+</tbody>
+</table>
+
+
+          <!-- Paginacja -->
+          <div>
+              {% if page > 1 %}
+                  <a href="{{ url_for('patients', page=page-1) }}">Previous</a>
+              {% endif %}
+              Page {{ page }} of {{ total_pages }}
+              {% if page < total_pages %}
+                  <a href="{{ url_for('patients', page=page+1) }}">Next</a>
+              {% endif %}
+          </div>
+  </section>
+</main>
+{% include 'foot.html' %}
