@@ -1,0 +1,65 @@
+{% include 'menu.html' %}
+<main>
+    {% include 'context.html' %}
+    <section class="content">
+      <h1>Patient Registered</h1>
+<p class="success">The patient has been successfully added to the database!</p>
+
+<table>
+    <tr>
+        <th>Field</th>
+        <th>Value</th>
+    </tr>
+    <tr>
+        <td>ID</td>
+        <td>{{ patient_data.get("id") }}</td>
+    </tr>
+    <tr>
+        <td>Gender</td>
+        <td>{{ patient_data.get("gender") }}</td>
+    </tr>
+    <tr>
+        <td>Age</td>
+        <td>{{ patient_data.get("age") }}</td>
+    </tr>
+    <tr>
+        <td>Hypertension</td>
+        <td>{{ patient_data.get("hypertension") }}</td>
+    </tr>
+    <tr>
+        <td>Heart Disease</td>
+        <td>{{ patient_data.get("heart_disease") }}</td>
+    </tr>
+    <tr>
+        <td>Ever Married</td>
+        <td>{{ patient_data.get("ever_married") }}</td>
+    </tr>
+    <tr>
+        <td>Work Type</td>
+        <td>{{ patient_data.get("work_type") }}</td>
+    </tr>
+    <tr>
+        <td>Residence Type</td>
+        <td>{{ patient_data.get("residence_type") }}</td>
+    </tr>
+    <tr>
+        <td>Average Glucose Level</td>
+        <td>{{ patient_data.get("avg_glucose_level") }}</td>
+    </tr>
+    <tr>
+        <td>BMI</td>
+        <td>{{ patient_data.get("bmi") }}</td>
+    </tr>
+    <tr>
+        <td>Smoking Status</td>
+        <td>{{ patient_data.get("smoking_status") }}</td>
+    </tr>
+    <tr>
+        <td>Stroke</td>
+        <td>{{ patient_data.get("stroke") }}</td>
+    </tr>
+</table>
+
+    </section>
+</main>
+{% include 'foot.html' %}

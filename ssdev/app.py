@@ -6,6 +6,7 @@ import pandas as pd
 import os
 import sqlite3
 import re
+import random
 
 # Databases connection config file
 from config import MONGO_URI, SQLITE_DB
@@ -89,7 +90,7 @@ def sysuser_add_form():
 
 @app.route('/system/users/added', methods=['POST'])
 def add_sysuser():
-    # Picking up data from the form
+    # Picking and validating up data from the form
     name = request.form.get('name', '').strip()
     surname = request.form.get('surname', '').strip()
     email = request.form.get('email', '').strip()
@@ -220,6 +221,52 @@ def update_password():
 
     return redirect(url_for('index'))
 
+# upadating system user data
+@app.route('/system/users/updated', methods=['POST'])
+def update_user():
+    try:
+        su_id = request.form['su_id']
+        p_id = request.form['p_id']
+        email = request.form['email']
+        name = request.form['name']
+        surname = request.form['surname']
+        role = request.form['role']
+
+        # Haszowanie na podstawie pola email (dla przykładu)
+        hashed_pwd = hashpw(email.encode('utf-8'), gensalt())
+
+        with sqlite3.connect(SQLITE_DB) as conn:
+            cursor = conn.cursor()
+            sql = """
+            UPDATE sys_usrs
+            SET p_id = ? email = ?, name = ?, surname = ?, role = ?, passwd = ?
+            WHERE su_id = ?
+            """
+            values = (email, name, surname, role, hashed_pwd, p_id)
+            cursor.execute(sql, values)
+            conn.commit()
+
+        flash("User updated successfully.", "success")
+        return redirect(url_for('get_sysusers'))  # Przekierowanie na listę użytkowników po aktualizacji
+    except sqlite3.Error as e:
+        flash(f"Database error: {e}", "error")
+        return redirect(url_for('get_sysusers'))
+# Removing system user form SQLite
+@app.route('/system/users/remove', methods=['POST'])
+def remove_sysusers():
+    # picking up sustem user id from previous page
+    su_id = request.form.get('su_id')
+    try:
+        with sqlite3.connect(SQLITE_DB) as conn:
+            # Removing sys user form SQLite database
+            conn.execute('DELETE FROM "sys_usrs" WHERE su_id = ?', (su_id,))
+            conn.commit()
+            flash(f"System user with ID {su_id} has been removed.", "success")
+    except sqlite3.Error as e:
+        flash(f"An error occurred: {e}", "error")
+
+    return redirect(url_for('index'))
+
 ### Patients area ####
 # Liting patients form MongoDB
 
@@ -245,6 +292,9 @@ def patients():
         # Data convertion, assingling to the relevant columns
         if data:
             df = pd.DataFrame(data)
+            if 'id' in df.columns:
+                df['id'] = pd.to_numeric(df['id'], errors='coerce')  # Zamiana na liczby (NaN dla niepoprawnych wartości)
+                df['id'] = df['id'].fillna(0).astype(int)  # Zastępowanie NaN zerem i rzutowanie na int
             columns_to_display = ['id', 'gender', 'age', 'work_type', 'Residence_type', 'bmi', 'smoking_status', 'stroke']
             df = df[columns_to_display]
 
@@ -322,6 +372,46 @@ def patient_details(patient_id):
 def patient_register():
     return render_template('patient_rform.html')
 
+# Adding patient's deatils to MongoDB
+
+@app.route('/patient/added', methods=['POST'])
+def add_patient():
+    try:
+        mongo_client = MongoClient(MONGO_URI)
+        db = mongo_client["ssdev001"]
+        collection = db["patient01"]
+        # Generating radnowm patient ID
+        while True:
+            patient_id = random.randint(1000, 999999)
+            # Checking if autgenerated patient id exists
+            if not collection.find_one({"id": patient_id}):
+                break
+        # Picking up data from register form page
+        patient_data = {
+            "id": patient_id,
+            "gender": request.form.get("gender"),
+            "age": int(request.form.get("age")) if request.form.get("age") else None,
+            "hypertension": int(request.form.get("hypertension")),
+            "heart_disease": int(request.form.get("heart_disease")),
+            "ever_married": request.form.get("ever_married"),
+            "work_type": request.form.get("work_type"),
+            "residence_type": request.form.get("residence_type"),
+            "avg_glucose_level": float(request.form.get("avg_glucose_level")) if request.form.get("avg_glucose_level") else None,
+            "bmi": float(request.form.get("bmi")) if request.form.get("bmi") else None,
+            "smoking_status": request.form.get("smoking_status"),
+            "stroke": int(request.form.get("stroke")),
+        }
+
+        # Adding data to the MongoDB
+        collection.insert_one(patient_data)
+
+        # Flash success confirmation message
+        flash("Patient data successfully added.", "success")
+    except Exception as e:
+        # Errors hadling
+        flash(f"An error occurred: {e}", "error")
+
+    return render_template('patient_registered.html', patient_data=patient_data)
 # MongoDB connection test
 @app.route('/mongo_test')
 def mongo_test():

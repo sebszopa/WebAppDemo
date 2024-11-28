@@ -27,6 +27,7 @@
                 </tr>
                 <tr>
                     <td colspan="2">
+                      <input type="hidden" name="su_id" value="{{ row['su_id'] }}">
                         <button type="submit">Save Changes</button>
                     </td>
                 </tr>
@@ -48,6 +49,17 @@
                     <td colspan="2">
                         <input type="hidden" name="su_id" value="{{ row['su_id'] }}">
                         <button type="submit">Change Password</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+        <form name="update_pwd" method="post" action="/system/users/remove">
+            <table>
+                <tr>
+                    <td><h1><font color="red">Remove Sytem User</font></h1></td>
+                    <td>
+                        <input type="hidden" name="su_id" value="{{ row['su_id'] }}">
+                        <button type="submit">Delete</button>
                     </td>
                 </tr>
             </table>

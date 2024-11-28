@@ -2,7 +2,7 @@
 <main>
     {% include 'context.html' %}
     <section class="content">
-      <form>
+      <form name="patient_add"method="post" action="/patient/added">
         <br>
         <label for="gender">Gender:</label>
         <select id="gender" name="gender">
